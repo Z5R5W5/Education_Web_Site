@@ -1,0 +1,49 @@
+﻿<nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm mb-4">
+    <div class="container-fluid">
+        <!-- Brand/logo -->
+        <a class="navbar-brand" href="#">
+            <img src="~/Images/temp/FRate.png" alt="Logo" width="65" />
+        </a>
+
+        <!-- Toggle for mobile -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain"
+        aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <!-- Navbar links -->
+        <div class="collapse navbar-collapse" id="navbarMain">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item"><a class="nav-link" asp-controller="Department" asp-action="Index">Departments</a></li>
+                <li class="nav-item"><a class="nav-link" asp-controller="Course" asp-action="Index">Courses</a></li>
+                @if (User.IsInRole("Admin") || User.IsInRole("Instructor"))
+                {
+                    <li class="nav-item"><a class="nav-link" asp-controller="Instructor" asp-action="Index">Instructors</a></li>
+
+                }
+
+                <li class="nav-item"><a class="nav-link" asp-controller="Trainer" asp-action="Index">Trainees</a></li>
+                <li class="nav-item"><a class="nav-link" asp-controller="CourseResult" asp-action="Index">Results</a></li>
+                @if (User.IsInRole("Admin") )
+                {
+                    <li class="nav-item"><a class="nav-link" asp-controller="User" asp-action="Index">Users</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Role" asp-action="Index">Roles</a></li>
+                }
+
+            </ul>
+
+            <ul class="navbar-nav">
+                 @if (!User.Identity.IsAuthenticated) 
+                 { 
+                <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Login">Login</a></li>
+                <li class="nav-item"><a class="nav-link" asp-controller="Account" asp-action="Register">Register</a></li>
+                 }
+                else
+                 {
+                    <li class="nav-item"><span class="navbar-text mb-lg-2">Welcome @User.Identity.Name.Split('@')[0]</span></li>
+                <li class="nav-item"><a class="nav-link fw-bold" asp-controller="Account" asp-action="Logout">Log Out</a></li>
+                }
+            </ul>
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,85 @@
+﻿@model CourseResultViewModel
+@{
+    ViewData["Title"] = "Add";
+    SelectList Traineeitems = new SelectList(ViewBag.TraineeName, "Id", "Name");
+    SelectList Coursesitems = new SelectList(ViewBag.CourseName, "Id", "Name");
+    Layout = "~/Views/Shared/_OperationLayout.cshtml";
+}
+<div class="card card-header">
+    <h1 class="text-center m-5" style="color:burlywood">Adding New TraineeResult</h1>
+    <form asp-action="Create" method="post">
+        @* <div> *@
+        @*     <label asp-for="trainee_id" class="m-1"></label> *@
+        @*     <span asp-validation-for="trainee_id" class="text-danger"></span> *@
+        @*     <select class="form-select" asp-for="trainee_id" asp-items="Traineeitems"><option>--Select Trainee--</option></select> *@
+        @* </div> *@
+        @* <div> *@
+        @*     <label asp-for="crs_id" class="m-1"></label> *@
+        @*     <span asp-validation-for="crs_id" class="text-danger"></span> *@
+        @*     <select class="form-select" asp-for="crs_id" asp-items="Coursesitems"><option>--Select Course--</option></select> *@
+        @* </div> *@
+
+        <div>
+            <label asp-for="trainee_id" class="m-1"></label>
+            <span asp-validation-for="trainee_id" class="text-danger"></span>
+            <select id="trainee_id" class="form-select" asp-for="trainee_id" asp-items="Traineeitems" onchange="loadCoursesByTrainee()">
+                <option value="">--Select Trainee--</option>
+            </select>
+        </div>
+
+        <div> 
+            <label asp-for="crs_id" class="m-1"></label> 
+            <span asp-validation-for="crs_id" class="text-danger"></span> 
+            <select id="crs_id" class="form-select" asp-for="crs_id"> 
+                <option value="">--Select Course--</option> 
+            </select> 
+        </div> 
+        <div>
+            <label asp-for="Degree" class="m-1"></label>
+            <span asp-validation-for="Degree" class="text-danger"></span>
+            <input class="form-control" asp-for="Degree" />
+        </div>
+        <br />
+        <div class="card-footer text-center">
+            <button class="btn btn-success w-25" asp-fragment="#">Add</button>
+            <a asp-action="Index" asp-fragment="#" class="btn btn-primary w-25">Cancel</a>
+        </div>
+
+    </form>
+</div>
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+	<script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+	<script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+	<script src="~/js/validation.js"></script>
+    <script>
+        function loadCoursesByTrainee() {
+            const traineeId = document.getElementById("trainee_id").value;
+
+            if (traineeId) {
+                $.ajax({
+                    url: '/CourseResult/GetCoursesForTrainee',
+                    type: 'GET',
+                    data: { traineeId: traineeId },
+                    success: function (courses) {
+                        const courseSelect = document.getElementById("crs_id");
+                        courseSelect.innerHTML = '<option value="">--Select Course--</option>';
+
+                        for (const course of courses) {
+                            const option = document.createElement("option");
+                            option.value = course.id;
+                            option.text = course.name;
+                            courseSelect.appendChild(option);
+                        }
+                    },
+                    error: function () {
+                        alert("Could not load courses for this trainee.");
+                    }
+                });
+            }
+        }
+    </script>
+
+}
+
